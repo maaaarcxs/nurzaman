@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
 from accounts.models import User
+from django.conf import settings
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -81,3 +82,46 @@ class GenericChangePasswordSerializer(serializers.Serializer):
 
 class DeactivateAccountSerializer(serializers.Serializer):
     confirm = serializers.BooleanField
+
+
+class SendMailSerializer(serializers.Serializer):
+    to_email = serializers.EmailField()
+    text = serializers.CharField()
+
+    # def save(self, **kwargs):
+    #     from django.core.mail import send_mail
+    #     print("sent")
+    #     send_mail(
+    #         subject="Test Email",
+    #         message=validated_data['text'],
+    #         from_email=settings.EMAIL_HOST_USER,
+    #         recipient_list=[validate_data['to_email']],
+    #         fail_silently=False,
+    #         )
+
+    def create(self, validated_data):
+        from django.core.mail import send_mail
+        print("sent")
+        send_mail(
+            subject="Test Email",
+            message=validated_data['text'],
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[validated_data['to email']],
+            fail_silently=False,
+        )
+        return validated_data
+    
+
+class SendResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required = False)
+
+
+class VerifyPasswordResetOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField(required = False)
+    code = serializers.CharField(max_length = 4)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required = False)
+    code = serializers.CharField(max_length = 4)
+    new_password = serializers.CharField(write_only = True, min_length = 6) 

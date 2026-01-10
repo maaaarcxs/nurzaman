@@ -1,9 +1,18 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth import logout
-from .serializers import LoginSerializer, RegisterSerializer, ProfileSerializer, FunctionChangePasswordSerializer
+from .serializers import (LoginSerializer, RegisterSerializer, ProfileSerializer, FunctionChangePasswordSerializer, SendMailSerializer)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def test_email_send(request):
+    serializer = SendMailSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response("Email sent successfully")
 
 
 @api_view(["POST"])

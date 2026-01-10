@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.core.mail import send_mail
+import os
+from decouple import config
+from dotenv import load_dotenv
+
+load_dotenv()
+
+USE_POSTGRES = os.getenv('USE_POSTGRES') == 'true'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +28,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pm4@v!ye1(0@48!nc&3t89m&ide46a(ux6&9c9$fnsu5b2@dpt'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
+
+DB_NAME = config('DB_NAME')
+DB_USER = config('DB_USER')
+DB_PASSWORD = config('DB_PASSWORD')
+DB_HOST = config('DB_HOST')
+DB_PORT = config('DB_PORT')
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -41,7 +54,10 @@ INSTALLED_APPS = [
     'django_resized',
     'rest_framework',
     'drf_yasg',
-    'django_filters'
+    'django_filters',
+    'accounts',
+    'phonenumber_field',
+    'phonenumbers'
 ]
 
 MIDDLEWARE = [
@@ -76,13 +92,26 @@ WSGI_APPLICATION = 'NURZAMAN.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+if not USE_POSTGRES:
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'Burkina-Faso',
+            'HOST': 'localhost',
+            'PORT': '5432'
+        }
+    }
+
 
 
 # Password validation
@@ -102,6 +131,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 
 # Internationalization
@@ -139,3 +170,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_POST = 587
+
+
+EMAIL_HOST_USER = 'myemail'
+EMAIL_HOST_PASSWORD = 'code'
+
+DEFAULT_FROM_EMAIL = 'myemail'

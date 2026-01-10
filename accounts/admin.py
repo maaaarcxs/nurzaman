@@ -11,9 +11,9 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'email', 'first_name')
+    list_display = ('id', 'email', 'full_name', 'age')
     list_display_links = ('id', 'email',)
-    search_fields = ('first_name', 'email',)
+    search_fields = ('full_name', 'email', 'age')
     filter_horizontal = ('groups', 'user_permissions')
     list_filter = (
         'is_staff',
@@ -25,10 +25,11 @@ class UserAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': (
             'email',
-            'password',
+            'password'
         )}),
         (_('Personal info'), {'fields': (
             'full_name',
+            'age'
         )}),
         (_('Permissions'), {'fields': (
             'is_active',

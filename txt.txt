@@ -1,0 +1,10 @@
+SQL = Django
+
+INT = IntegerField
+VARCHAR = CharField, EmailField
+TEXT = TextField
+BOOLEAN = BooleanField
+DATE = DateField
+TIME = TimeField
+TIMESTAMP = DateRimeField
+NULL = None
