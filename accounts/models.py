@@ -24,7 +24,7 @@ class User(AbstractUser, PermissionsMixin):
 
     username = None
     full_name = models.CharField(max_length=200, verbose_name='ФИО')
-    age = models.IntegerField(verbose_name='Возраст пользователя', null=False, blank=False)
+    age = models.IntegerField(verbose_name='Возраст пользователя', null=True, blank=True)
     email = models.EmailField(verbose_name='электронная почта', unique=True, blank=False, null=False)
     phone_number = PhoneNumberField(verbose_name='Номер телефона', null=True, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="user", verbose_name="Роль пользователя")
