@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from django.core.mail import send_mail
 import os
-from decouple import config
+# from decouple import config
 from dotenv import load_dotenv
 
 USE_POSTGRES = os.getenv('USE_POSTGRES')
@@ -23,20 +23,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "true"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+# SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
 
-DB_NAME = config('DB_NAME')
-DB_USER = config('DB_USER')
-DB_PASSWORD = config('DB_PASSWORD')
-DB_HOST = config('DB_HOST')
-DB_PORT = config('DB_PORT')
+
+# DEBUG = config('DEBUG', default=True, cast=bool)
+
+# DB_NAME = config('DB_NAME')
+# DB_USER = config('DB_USER')
+# DB_PASSWORD = config('DB_PASSWORD')
+# DB_HOST = config('DB_HOST')
+# DB_PORT = config('DB_PORT')
 
 ALLOWED_HOSTS = ['*']
 
@@ -88,9 +93,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'NURZAMAN.wsgi.application'
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_URL = os.getenv("REDIS_URL")
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -109,7 +114,7 @@ if not USE_POSTGRES:
 else:
     DATABASES = {
         'default': {
-            "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("DB_NAME"),
         "USER": os.getenv("DB_USER"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
@@ -180,7 +185,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
-EMAIL_POST = 587
+EMAIL_PORT = 587
 
 
 EMAIL_HOST_USER = 'myemail'
