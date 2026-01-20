@@ -8,3 +8,5 @@ DATE = DateField
 TIME = TimeField
 TIMESTAMP = DateRimeField
 NULL = None
+
+# REDIS_HOST = '6379'
