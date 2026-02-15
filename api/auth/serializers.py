@@ -50,7 +50,7 @@ class FunctionChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(write_only=True, validators=[validate_password])
 
     def validate(self, attrs):
-        user = self.context['user']
+        user = self.context['request'].user
         if not user.check_password(attrs.get('old_password')):
             raise serializers.ValidationError('Старый пароль неверный!')
         return attrs
@@ -69,7 +69,7 @@ class GenericChangePasswordSerializer(serializers.Serializer):
     def validate(self, attrs):
         user = self.context["request"].user
         print(attrs.get("old_password"))
-        if not user.checl_password(attrs.get("old_password")):
+        if not user.check_password(attrs.get("old_password")):
             raise serializers.ValidationError("Старый пароль неверен")
         return attrs
     

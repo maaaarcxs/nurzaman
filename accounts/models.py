@@ -64,7 +64,7 @@ class PasswordResetCode(models.Model):
 class OTPVerification(models.Model):
     email = models.EmailField(verbose_name="Электронная почта", blank=True, null=True)
     code = models.CharField(max_length=4)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    created_at = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
 
     def is_expired(self):
         return (now() - self.created_at).seconds > 300
